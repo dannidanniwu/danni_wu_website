@@ -1,11 +1,11 @@
 ---
 title: "Hello, world (with a prior)"
 date: 2026-06-11
-tags: [meta]
+tags: [first]
 ---
 
-Welcome to my blog! I plan to use this space for notes on Bayesian statistics, clinical trial design, and statistical computing in R — the kind of things that don't quite fit in a paper but are too useful to keep in a drawer.
-
+Welcome to my blog! I plan to use this space for notes on statistics and AI — the kind of things that don't quite fit in a paper but are too useful to keep in a drawer.
+<!--
 ## How this blog works
 
 This site is built with Jekyll on GitHub Pages, so writing a new post is just adding a Markdown file to the `_posts` folder, named like `2026-06-11-my-post-title.md`, with a small header at the top:
@@ -32,3 +32,4 @@ quantile(posterior, c(0.025, 0.5, 0.975))
 ```
 
 More soon.
+-->
