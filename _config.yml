@@ -4,7 +4,7 @@ description: >-
   Danni Wu, Ph.D. — Biostatistician at Pfizer. Bayesian adaptive design,
   causal inference, and clinical trial methodology.
 url: "https://dannidanniwu.github.io"
-baseurl: ""
+baseurl: "/danni_wu_website"
 
 author:
   name: Danni Wu
