@@ -1,0 +1,32 @@
+# Site settings
+title: Danni Wu
+description: >-
+  Danni Wu, Ph.D. — Biostatistician at Pfizer. Bayesian adaptive design,
+  causal inference, and clinical trial methodology.
+url: "https://dannidanniwu.github.io"
+baseurl: ""
+
+author:
+  name: Danni Wu
+  email: wu.danni.stat@gmail.com
+
+# Links shown in header / footer
+links:
+  scholar: "https://scholar.google.com/citations?user=Mmp1HHIAAAAJ" # update if needed
+  github: "https://github.com/dannidanniwu"
+  linkedin: "https://www.linkedin.com/in/danni-wu-nyu/" # update if needed
+  email: "mailto:wu.danni.stat@gmail.com"
+
+# Build settings
+markdown: kramdown
+permalink: /blog/:year/:title/
+exclude:
+  - README.md
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"

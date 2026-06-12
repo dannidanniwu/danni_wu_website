@@ -1,0 +1,17 @@
+---
+layout: default
+---
+<article class="post container">
+  <header class="post-header">
+    <p class="eyebrow"><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>{% if page.tags and page.tags.size > 0 %} · {{ page.tags | join: " · " }}{% endif %}</p>
+    <h1 class="post-title">{{ page.title }}</h1>
+  </header>
+
+  <div class="post-body prose">
+    {{ content }}
+  </div>
+
+  <nav class="post-nav">
+    <a href="{{ '/blog/' | relative_url }}">&larr; All posts</a>
+  </nav>
+</article>

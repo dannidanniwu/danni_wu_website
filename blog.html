@@ -1,0 +1,24 @@
+---
+layout: default
+title: Blog
+permalink: /blog/
+---
+
+<div class="container page">
+  <h1 class="page-title">Blog</h1>
+  <p class="page-intro">Notes on Bayesian statistics, clinical trial design, and things I'm learning along the way.</p>
+
+  {% if site.posts.size > 0 %}
+  <ul class="post-list">
+    {% for post in site.posts %}
+    <li>
+      <span class="when"><time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time></span>
+      <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+      <p class="excerpt">{{ post.excerpt | strip_html | truncate: 180 }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No posts yet — check back soon.</p>
+  {% endif %}
+</div>
