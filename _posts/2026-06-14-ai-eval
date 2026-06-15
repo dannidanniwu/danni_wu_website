@@ -1,0 +1,91 @@
+---
+layout: post
+title: "A Practical Guide to Evaluating AI Systems"
+date: 2026-06-14
+tags: [AI, evaluation, machine learning]
+---
+
+How do you know whether an AI system is actually any good?
+
+It is a deceptively hard question. A model can sound fluent and confident while being wrong, off-tone, or subtly unhelpful. This post lays out the four main ways teams evaluate AI systems, what each one costs, and how they fit together into a working evaluation loop.
+
+## Four ways to evaluate
+
+
+### 1. Code-based evaluation
+
+The cheapest option. You write code that runs a deterministic pass/fail check on the model's output — does the answer contain the expected value, return valid JSON, fall within a numeric range? This works well for questions with a single verifiable answer.
+
+Its strength is also its limit: code can confirm *correctness* on well-defined tasks, but it can't judge whether an answer was tactful, well-reasoned, or appropriate in tone.
+
+### 2. Human evaluation
+
+Here a human in the loop — often a domain expert — rates the model's outputs as good or bad against a set of criteria. In practice this lives in a spreadsheet: one column per criterion (for example, product knowledge, tone, factual accuracy), with reviewers scoring each response.
+
+This is the most expensive method, but also the most precise, because it captures the nuance that automated checks miss.
+
+The catch is consistency. If two reviewers disagree about what counts as a "good" answer, your labels are noise. This is where **inter-annotator agreement** comes in.
+
+#### Measuring agreement between annotators
+
+Inter-annotator agreement (IAA) quantifies how consistently different humans apply the same labels. The standard coefficients are:
+
+- **Cohen's κ (kappa)** — agreement between two annotators.
+- **Fleiss' κ** — a generalization of kappa to more than two annotators.
+- **Krippendorff's α (alpha)** — a flexible coefficient that handles multiple annotators, different measurement scales, and missing data.
+
+A common rule of thumb for interpreting these values:
+
+- **≥ 0.8** — strong agreement; the labels are reliable.
+- **0.6 – 0.8** — moderate agreement; usable, but treat conclusions with some caution.
+- **< 0.6** — problematic; the annotation scheme or the reviewers' shared understanding needs work.
+
+These thresholds are heuristics, not laws. As Artstein and Poesio note in their survey of agreement measures, a single coefficient can never fully capture the complexity of a real annotation task — different aspects of the labeling will be reliable to different degrees. The number is a starting point for investigation, not a verdict.
+
+### 3. LLM as a judge
+
+What if you used one language model to grade the outputs of another? "LLM-as-a-judge" does exactly this: a model labels results against your criteria, approximating human judgment at a fraction of the cost and time.
+
+It is powerful, but it has real biases. LLM judges are sensitive to prompt wording and can be unstable on edge cases, where their verdicts wobble in ways a careful human's wouldn't.
+
+One solution is **human calibration**. The idea:
+
+1. Build a golden dataset of examples that humans have already labeled.
+2. Have the LLM judge label the same examples.
+3. Check the match rate between the LLM's labels and the human labels.
+4. Refine the judge — its prompt, criteria, or instructions — until its judgments line up with the human ground truth.
+
+Once an LLM judge is calibrated against trusted human labels, it can scale your evaluation far beyond what manual review alone could cover.
+
+### 4. User evaluation (real-world signals)
+
+Finally, you put the system in front of real users and collect metrics and feedback from actual usage. This is the ultimate test — it reflects genuine behavior rather than a curated test set — though it arrives latest in the process and is hardest to control.
+Notably, learning from real human feedback is the same principle behind how modern assistants are aligned in the first place - using reinforcement learning from human feedback (RLHF), where human preferences over model responses directly shaped the model's behavior. Evaluation and training, in other words, draw on the same well: structured human judgment.
+
+## The evaluation loop in practice
+
+Putting it together, here is the workflow I find most useful. The key idea is that it scales gradually: 
+![The real-world eval process: a seven-step flow from a basic prompt through small-set human labeling, an aligned LLM judge, scaling to ~100 examples, and a gradual real-world rollout.](/images/eval-process.svg)
+
+1. **Start with a basic prompt.** Get a first working version of the system in place — something to evaluate.
+2. **Define your evaluation criteria.** Decide the aspects you'll grade the system on — accuracy, tone, completeness, and so on — turning vague dissatisfaction ("the answers feel off") into concrete, measurable dimensions.
+3. **Hand-label a small set to build a golden dataset.** Have your team label at least ~10 examples against those criteria, and check inter-annotator agreement so you can trust the labels. This labeled set becomes your *golden dataset* — the ground truth everything else is measured against.
+4. **Bring in an LLM judge — and iterate.** Run an LLM-as-judge over those same examples and align its labels with your human labels. This is the iterate stage: refine the prompt, re-run, and compare until the judge's verdicts match your golden dataset. Once they do, you have an automated grader you can actually trust.
+5. **Scale up and spot-check.** Run the LLM judge across a large set, then randomly sample a subset for humans to label and confirm the judge still agrees with them at scale. Keep tuning the judge until it can reliably stand in for human labels — at which point you can trust it for scaled analysis and A/B testing.
+6. **Run a small real-world test.** Ship to a limited audience: an A/B test, internal users, or maybe 1% of live traffic.
+7. **Evaluate in the wild.** Finally, look at real-world data with your evals in place and assess how good the system is overall.
+
+
+
+## Closing thought
+
+Good evaluation is less about any single clever metric and more about discipline: defining what you mean by quality, measuring it consistently, and being honest about where your measurements are shaky. The tools range from a few lines of pass/fail code to a panel of expert reviewers, but the underlying question never changes — *can I trust this, and how do I know?*
+
+---
+
+### References and further reading
+
+- Bai, Y., Jones, A., Ndousse, K., et al. (2022). *Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback.* arXiv:2204.05862.
+- Artstein, R., & Poesio, M. (2008). *Survey Article: Inter-Coder Agreement for Computational Linguistics.* Computational Linguistics, 34(4), 555–596.
+- Khan, A. (2025). *Complete Beginner's Course on AI Evaluations in 50 Minutes.*
+- DeepLearning.AI. *Evaluating AI Agents.*
