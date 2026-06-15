@@ -30,3 +30,4 @@ defaults:
       type: "posts"
     values:
       layout: "post"
+future: true
